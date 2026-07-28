@@ -83,6 +83,23 @@
       font-family: monospace;
     }
 
+    /* 🔢 ژمارەی لاپەڕە لە خوارەوەی بەشی ناوەڕاست */
+    .page-bottom-number {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: rgba(0, 0, 0, 0.45);
+      background: rgba(255, 255, 255, 0.75);
+      padding: 1px 8px;
+      border-radius: 10px;
+      pointer-events: none;
+      z-index: 10;
+      direction: ltr;
+      font-family: monospace, sans-serif;
+    }
+
     /* ⚠️ شاشەی ڕەتکردنەوەی دەستگەیشتن */
     #access-denied {
       display: flex;
@@ -153,7 +170,7 @@
         .then(data => {
           if (data.ok && ['creator', 'administrator', 'member'].includes(data.result.status)) {
             
-            // 📚 دروستکردنی لیستی ناوی فایلی وێنەکان بە سێ ئاتبۆردەکەی 17 وە
+            // 📚 دروستکردنی لیستی ناوی فایلی وێنەکان
             const imageList = [];
 
             // لاپەڕەکانی ١ تا ١٦
@@ -171,7 +188,7 @@
               imageList.push(`dafyane bookArtboard ${i}.jpg`);
             }
 
-            // بارکردنی تەواوی وێنەکان لە ناو لاپەڕەکەدا
+            // بارکردنی تەواوی وێنەکان
             const bookContainer = document.getElementById('book-content');
             bookContainer.innerHTML = '';
 
@@ -181,6 +198,7 @@
               wrapper.innerHTML = `
                 <div class="page-top-badge">${handle}</div>
                 <img src="${fileName}" alt="پەڕەی ${index + 1}" class="page-image" loading="lazy">
+                <div class="page-bottom-number">${index + 1}</div>
               `;
               bookContainer.appendChild(wrapper);
             });
