@@ -72,20 +72,22 @@
       user-select: none;
     }
 
-    /* 🏷️ نیشانەی بچووکی سەر گۆشەی ڕاستی لاپەڕەکان */
-    .page-top-badge {
+    /* 🏷️ واتەرمارکی ناوەڕاستی لاپەڕەکان - ئۆپاسیتی زۆر نزم بۆ سکرین‌شۆت */
+    .page-center-watermark {
       position: absolute;
-      top: 6px;
-      right: 8px;
-      font-size: 9px;
-      color: rgba(0, 0, 0, 0.35);
-      background: rgba(255, 255, 255, 0.6);
-      padding: 1px 6px;
-      border-radius: 3px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-size: 15px;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.12); /* ڕەنگێکی زۆر کاڵ کە خوێندنەوە تێک نادات */
       pointer-events: none;
       z-index: 10;
       direction: ltr;
-      font-family: monospace;
+      font-family: monospace, sans-serif;
+      white-space: nowrap;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     /* 🔢 ژمارەی لاپەڕە لە خوارەوەی بەشی ناوەڕاست */
@@ -133,6 +135,14 @@
       font-size: 13px;
       line-height: 1.6;
       color: #b0b0b0;
+      margin-bottom: 15px;
+    }
+
+    #access-denied h6 {
+      font-size: 12px;
+      color: #888;
+      font-weight: normal;
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -207,7 +217,7 @@
               const wrapper = document.createElement('div');
               wrapper.className = 'page-wrapper';
               wrapper.innerHTML = `
-                <div class="page-top-badge">${handle}</div>
+                <div class="page-center-watermark">${watermarkText}</div>
                 <img src="${fileName}" alt="پەڕەی ${index + 1}" class="page-image" loading="lazy">
                 <div class="page-bottom-number">${index + 1}</div>
               `;
