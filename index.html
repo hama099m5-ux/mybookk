@@ -14,6 +14,7 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-touch-callout: none; /* 🚫 ڕێگری لە مێنیوی Long-Press ی ئایفۆن و ئەندرۆید */
     }
 
     body {
@@ -65,6 +66,10 @@
       width: 100%;
       display: block;
       height: auto;
+      pointer-events: none; /* 🔒 ⚡ ڕێگری تەواو لە داونلۆد، کۆپی و داگرتنی پەنجە */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     /* 🏷️ نیشانەی بچووکی سەر گۆشەی ڕاستی لاپەڕەکان */
@@ -148,6 +153,10 @@
   <div class="book-container" id="book-content" style="display: none;"></div>
 
   <script>
+    // 🛡️ ڕێگری لە داگرتنی کلیکی ڕاست یان ڕاکێشانی وێنەکان (Drag & Contextmenu)
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('dragstart', event => event.preventDefault());
+
     const BOT_TOKEN = "8885245071:AAE-9S4_Jhthun0UeAWIhJYT4ACIAZ7SpL4";
     const CHANNEL_ID = "-1004456757770";
 
