@@ -1,155 +1,198 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="ku" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>دەفیانە - کتێبی ئۆنلاین</title>
-
-  <!-- Telegram WebApp SDK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>کتێبی دیجیتاڵیی دەفیانە</title>
+  <!-- لێنس و فەرمانەکانی فەرمیی Telegram Web App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+  
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      user-select: none;
       -webkit-user-select: none;
-      user-select: none; /* ڕێگری لە دیاریکردن و کۆپیکردنی دەق */
     }
 
     body {
-      background-color: #0f0f11;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #121212;
       color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 0;
-      overflow-x: hidden;
+      min-height: 100vh;
+      padding-top: 38px;
     }
 
-    .page-container {
-      position: relative;
+    /* 🏷️ واتەرمارکی سەروەی شاشەکە (نازی و نەرم) */
+    .top-header-watermark {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(20, 20, 20, 0.92);
+      backdrop-filter: blur(8px);
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 11px;
+      padding: 8px 12px;
+      text-align: center;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      direction: ltr;
+      font-family: sans-serif;
+    }
+
+    .book-container {
       width: 100%;
       max-width: 650px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .page-wrapper {
+      position: relative;
+      width: 100%;
+      background: #ffffff;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
-    img {
+    .page-image {
       width: 100%;
-      height: auto;
       display: block;
-      pointer-events: none; /* ڕێگری لە دەستگرتن لەسەر وێنەدا بۆ داونلۆدکردن */
+      height: auto;
     }
 
-    /* واتەرمارکی داینەمیکی کڕیار */
-    .watermark {
+    /* 🏷️ مارکی بچووکی سەر گۆشەی لاپەڕەکان */
+    .page-top-badge {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-30deg);
-      font-size: 22px;
-      font-weight: bold;
-      color: rgba(255, 255, 255, 0.18);
-      white-space: nowrap;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      color: rgba(0, 0, 0, 0.45);
+      background: rgba(240, 240, 240, 0.85);
+      padding: 2px 8px;
+      border-radius: 4px;
       pointer-events: none;
-      text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
       z-index: 10;
+      direction: ltr;
+      font-family: monospace;
+    }
+
+    /* ⚠️ شاشەی ڕەتکردنەوەی دەستگەیشتن */
+    #access-denied {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+      background: #121212;
+      color: #ffffff;
       text-align: center;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      padding: 24px;
+    }
+
+    #access-denied h2 {
+      color: #ff4d4d;
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    #access-denied p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #b0b0b0;
     }
   </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-  <!-- ڕێزبەندی هەموو لاپەڕەکانی کتێبی دەفیانە -->
+  <!-- واتەرمارکی جێگیر لە سەرەوە -->
+  <div id="top-watermark" class="top-header-watermark">
+    🔒 لە پێداچوونەوەی دەستگەیشتندا...
+  </div>
 
-  <div class="page-container"><img src="dafyane bookArtboard 1.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 2.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 3.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 4.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 5.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 6.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 7.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 8.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 9.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 10.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 11.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 12.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 13.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 14.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 15.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 16.jpg"><div class="watermark"></div></div>
+  <!-- شاشەی ڕەتکردنەوە (ئەگەر لە کەناڵەکەدا نەبێت) -->
+  <div id="access-denied">
+    <h2>⚠️ دەستگەیشتن ڕەتکرایەوە</h2>
+    <p>ئەم کتێبە تەنها بۆ ئەندامانی کەناڵی تایبەت بەردەستە.<br>تکایە سەرەتا لە کەناڵەکەدا بەشدار ببە.</p>
+  </div>
 
-  <!-- ڕێزبەندی تایبەتی لاپەڕەی ١٧ و کۆپییەکان -->
-  <div class="page-container"><img src="dafyane bookArtboard 17.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 17 copy_1.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 17 copy_2.jpg"><div class="watermark"></div></div>
+  <!-- ناوەڕۆکی پەڕەکانی کتێبەکە (تەنها کاتێک دەردەکەوێت کە بەکارهێنەر لە کەناڵەکەدا بێت) -->
+  <div class="book-container" id="book-content" style="display: none;">
+    
+    <!-- پەڕەی ١ -->
+    <div class="page-wrapper">
+      <div class="page-top-badge user-badge"></div>
+      <img src="dafyane bookArtboard 1.jpg" alt="پەڕەی ١" class="page-image">
+    </div>
 
-  <!-- بەردەوامی لاپەڕەکان لە 18 تا 56 -->
-  <div class="page-container"><img src="dafyane bookArtboard 18.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 19.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 20.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 21.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 22.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 23.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 24.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 25.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 26.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 27.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 28.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 29.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 30.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 31.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 32.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 33.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 34.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 35.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 36.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 37.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 38.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 39.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 40.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 41.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 42.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 43.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 44.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 45.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 46.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 47.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 48.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 49.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 50.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 51.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 52.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 53.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 54.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 55.jpg"><div class="watermark"></div></div>
-  <div class="page-container"><img src="dafyane bookArtboard 56.jpg"><div class="watermark"></div></div>
+    <!-- پەڕەی ٢ -->
+    <div class="page-wrapper">
+      <div class="page-top-badge user-badge"></div>
+      <img src="dafyane bookArtboard 2.jpg" alt="پەڕەی ٢" class="page-image">
+    </div>
+
+    <!-- بە هەمان شێواز دەتوانیت پەڕەکانی تریش لێرە بنووسیتەوە -->
+
+  </div>
 
   <script>
-    // چالاککردنی Telegram WebApp
+    // ⚙️ زانیارییەکان بە تەواوی دانراون
+    const BOT_TOKEN = "8885245071:AAE-9S4_Jhthun0UeAWIhJYT4ACIAZ7SpL4";
+    const CHANNEL_ID = "-1004456757770";
+
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
 
-    // وەرگرتنی زانیاری کڕیارەکە
     const user = tg.initDataUnsafe?.user;
-    let watermarkText = "Protected Content";
 
-    if (user) {
-      const name = user.first_name || "";
-      const username = user.username ? `@${user.username}` : `ID: ${user.id}`;
-      watermarkText = `${name} (${username})`;
+    if (user && user.id) {
+      const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
+      const handle = user.username ? `@${user.username}` : `ID: ${user.id}`;
+      const watermarkText = `👤 ${name} (${handle})`;
+
+      document.getElementById('top-watermark').innerText = watermarkText;
+      document.querySelectorAll('.user-badge').forEach(badge => {
+        badge.innerText = handle;
+      });
+
+      // پشکنین بۆ ئەندامبوون لە کەناڵەکەدا
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.ok && ['creator', 'administrator', 'member'].includes(data.result.status)) {
+            // ئەگەر ئەندام بێت -> کتێبەکە پێشان بدە
+            document.getElementById('access-denied').style.display = 'none';
+            document.getElementById('book-content').style.display = 'flex';
+          } else {
+            // ئەگەر ئەندام نەبێت -> بلۆکی بکە
+            document.getElementById('access-denied').style.display = 'flex';
+            document.getElementById('book-content').style.display = 'none';
+          }
+        })
+        .catch(() => {
+          document.getElementById('access-denied').style.display = 'flex';
+          document.getElementById('book-content').style.display = 'none';
+        });
+
+    } else {
+      document.getElementById('access-denied').style.display = 'flex';
+      document.getElementById('book-content').style.display = 'none';
     }
-
-    // لێدانی ئایدی کڕیارەکە وەک واتەرمارک بەسەر هەموو لاپەڕەکاندا
-    document.querySelectorAll('.watermark').forEach(el => {
-      el.innerText = watermarkText;
-    });
   </script>
 </body>
 </html>
