@@ -27,7 +27,7 @@
       padding: 10px 0;
     }
 
-    /* 🏷️ واتەرمارکی سووچی لای چەپ - بێ باکگراوند، سایزی بچووک و ڕوون */
+    /* 🏷️ واتەرمارکی سووچی لای چەپ - بێ باکگراوند، سایزی بچووک */
     .top-header-watermark {
       position: fixed;
       top: 8px;
@@ -116,7 +116,7 @@
 </head>
 <body>
 
-  <!-- واتەرمارکی سووچی چەپ (بێ باکگراوند) -->
+  <!-- واتەرمارکی سووچی چەپ -->
   <div id="top-watermark" class="top-header-watermark">
     🔒 Checking...
   </div>
@@ -127,13 +127,12 @@
     <p>ئەم کتێبە تەنها بۆ ئەندامانی کەناڵی تایبەت بەردەستە.<br>تکایە سەرەتا لە کەناڵەکەدا بەشدار ببە.</p>
   </div>
 
-  <!-- کانتێنەری لاپەڕەکان (ئۆتۆماتیکی لە ١ تا ٥٦ دروست دەبێت) -->
+  <!-- کانتێنەری لاپەڕەکان -->
   <div class="book-container" id="book-content" style="display: none;"></div>
 
   <script>
     const BOT_TOKEN = "8885245071:AAE-9S4_Jhthun0UeAWIhJYT4ACIAZ7SpL4";
     const CHANNEL_ID = "-1004456757770";
-    const TOTAL_PAGES = 56; // ژمارەی تەواوی ٥٦ لاپەڕەکە
 
     const tg = window.Telegram.WebApp;
     tg.ready();
@@ -146,27 +145,45 @@
       const handle = user.username ? `@${user.username}` : `ID: ${user.id}`;
       const watermarkText = `👤 ${name} (${handle})`;
 
-      // جێگیرکردنی زانیاری لە سووچی چەپی سەرەوە
       document.getElementById('top-watermark').innerText = watermarkText;
 
-      // پشکنینی ئەندامبوون لە کەناڵە تایبەتەکەدا
+      // پشکنینی ئەندامبوون لە کەناڵدا
       fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${user.id}`)
         .then(res => res.json())
         .then(data => {
           if (data.ok && ['creator', 'administrator', 'member'].includes(data.result.status)) {
-            // کاتێک ئەندامە -> لۆدکردنی تەواوی ٥٦ لاپەڕەکە
+            
+            // 📚 دروستکردنی لیستی ناوی فایلی وێنەکان بە سێ ئاتبۆردەکەی 17 وە
+            const imageList = [];
+
+            // لاپەڕەکانی ١ تا ١٦
+            for (let i = 1; i <= 16; i++) {
+              imageList.push(`dafyane bookArtboard ${i}.jpg`);
+            }
+
+            // سێ ئاتبۆردەکەی لاپەڕەی ١٧
+            imageList.push("dafyane bookArtboard 17 copy_1.jpg");
+            imageList.push("dafyane bookArtboard 17 copy_2.jpg");
+            imageList.push("dafyane bookArtboard 17.jpg");
+
+            // لاپەڕەکانی ١٨ تا ٥٦
+            for (let i = 18; i <= 56; i++) {
+              imageList.push(`dafyane bookArtboard ${i}.jpg`);
+            }
+
+            // بارکردنی تەواوی وێنەکان لە ناو لاپەڕەکەدا
             const bookContainer = document.getElementById('book-content');
             bookContainer.innerHTML = '';
 
-            for (let i = 1; i <= TOTAL_PAGES; i++) {
+            imageList.forEach((fileName, index) => {
               const wrapper = document.createElement('div');
               wrapper.className = 'page-wrapper';
               wrapper.innerHTML = `
                 <div class="page-top-badge">${handle}</div>
-                <img src="dafyane bookArtboard ${i}.jpg" alt="پەڕەی ${i}" class="page-image" loading="lazy">
+                <img src="${fileName}" alt="پەڕەی ${index + 1}" class="page-image" loading="lazy">
               `;
               bookContainer.appendChild(wrapper);
-            }
+            });
 
             document.getElementById('access-denied').style.display = 'none';
             document.getElementById('book-content').style.display = 'flex';
