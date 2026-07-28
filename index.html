@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>کتێبی دیجیتاڵیی دەفیانە</title>
-  <!-- لێنس و فەرمانەکانی فەرمیی Telegram Web App -->
+  <!-- Telegram Web App Script -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
   <style>
@@ -24,34 +24,31 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding-top: 38px;
+      padding: 10px 0;
     }
 
-    /* 🏷️ واتەرمارکی سەروەی شاشەکە (نازی و نەرم) */
+    /* 🏷️ واتەرمارکی سووچی لای چەپ - بێ باکگراوند، سایزی بچووک و ڕوون */
     .top-header-watermark {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(20, 20, 20, 0.92);
-      backdrop-filter: blur(8px);
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 11px;
-      padding: 8px 12px;
-      text-align: center;
+      top: 8px;
+      left: 10px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 10px;
       z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
       direction: ltr;
-      font-family: sans-serif;
+      font-family: monospace, sans-serif;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
 
     .book-container {
       width: 100%;
       max-width: 650px;
-      padding: 12px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
     }
 
@@ -59,9 +56,9 @@
       position: relative;
       width: 100%;
       background: #ffffff;
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
     .page-image {
@@ -70,16 +67,16 @@
       height: auto;
     }
 
-    /* 🏷️ مارکی بچووکی سەر گۆشەی لاپەڕەکان */
+    /* 🏷️ نیشانەی بچووکی سەر گۆشەی ڕاستی لاپەڕەکان */
     .page-top-badge {
       position: absolute;
-      top: 8px;
-      right: 10px;
-      font-size: 10px;
-      color: rgba(0, 0, 0, 0.45);
-      background: rgba(240, 240, 240, 0.85);
-      padding: 2px 8px;
-      border-radius: 4px;
+      top: 6px;
+      right: 8px;
+      font-size: 9px;
+      color: rgba(0, 0, 0, 0.35);
+      background: rgba(255, 255, 255, 0.6);
+      padding: 1px 6px;
+      border-radius: 3px;
       pointer-events: none;
       z-index: 10;
       direction: ltr;
@@ -107,11 +104,11 @@
     #access-denied h2 {
       color: #ff4d4d;
       margin-bottom: 12px;
-      font-size: 20px;
+      font-size: 18px;
     }
 
     #access-denied p {
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.6;
       color: #b0b0b0;
     }
@@ -119,40 +116,24 @@
 </head>
 <body>
 
-  <!-- واتەرمارکی جێگیر لە سەرەوە -->
+  <!-- واتەرمارکی سووچی چەپ (بێ باکگراوند) -->
   <div id="top-watermark" class="top-header-watermark">
-    🔒 لە پێداچوونەوەی دەستگەیشتندا...
+    🔒 Checking...
   </div>
 
-  <!-- شاشەی ڕەتکردنەوە (ئەگەر لە کەناڵەکەدا نەبێت) -->
+  <!-- شاشەی ڕەتکردنەوەی دەستگەیشتن -->
   <div id="access-denied">
     <h2>⚠️ دەستگەیشتن ڕەتکرایەوە</h2>
     <p>ئەم کتێبە تەنها بۆ ئەندامانی کەناڵی تایبەت بەردەستە.<br>تکایە سەرەتا لە کەناڵەکەدا بەشدار ببە.</p>
   </div>
 
-  <!-- ناوەڕۆکی پەڕەکانی کتێبەکە (تەنها کاتێک دەردەکەوێت کە بەکارهێنەر لە کەناڵەکەدا بێت) -->
-  <div class="book-container" id="book-content" style="display: none;">
-    
-    <!-- پەڕەی ١ -->
-    <div class="page-wrapper">
-      <div class="page-top-badge user-badge"></div>
-      <img src="dafyane bookArtboard 1.jpg" alt="پەڕەی ١" class="page-image">
-    </div>
-
-    <!-- پەڕەی ٢ -->
-    <div class="page-wrapper">
-      <div class="page-top-badge user-badge"></div>
-      <img src="dafyane bookArtboard 2.jpg" alt="پەڕەی ٢" class="page-image">
-    </div>
-
-    <!-- بە هەمان شێواز دەتوانیت پەڕەکانی تریش لێرە بنووسیتەوە -->
-
-  </div>
+  <!-- کانتێنەری لاپەڕەکان (ئۆتۆماتیکی لە ١ تا ٥٦ دروست دەبێت) -->
+  <div class="book-container" id="book-content" style="display: none;"></div>
 
   <script>
-    // ⚙️ زانیارییەکان بە تەواوی دانراون
     const BOT_TOKEN = "8885245071:AAE-9S4_Jhthun0UeAWIhJYT4ACIAZ7SpL4";
     const CHANNEL_ID = "-1004456757770";
+    const TOTAL_PAGES = 56; // ژمارەی تەواوی ٥٦ لاپەڕەکە
 
     const tg = window.Telegram.WebApp;
     tg.ready();
@@ -165,21 +146,31 @@
       const handle = user.username ? `@${user.username}` : `ID: ${user.id}`;
       const watermarkText = `👤 ${name} (${handle})`;
 
+      // جێگیرکردنی زانیاری لە سووچی چەپی سەرەوە
       document.getElementById('top-watermark').innerText = watermarkText;
-      document.querySelectorAll('.user-badge').forEach(badge => {
-        badge.innerText = handle;
-      });
 
-      // پشکنین بۆ ئەندامبوون لە کەناڵەکەدا
+      // پشکنینی ئەندامبوون لە کەناڵە تایبەتەکەدا
       fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${user.id}`)
         .then(res => res.json())
         .then(data => {
           if (data.ok && ['creator', 'administrator', 'member'].includes(data.result.status)) {
-            // ئەگەر ئەندام بێت -> کتێبەکە پێشان بدە
+            // کاتێک ئەندامە -> لۆدکردنی تەواوی ٥٦ لاپەڕەکە
+            const bookContainer = document.getElementById('book-content');
+            bookContainer.innerHTML = '';
+
+            for (let i = 1; i <= TOTAL_PAGES; i++) {
+              const wrapper = document.createElement('div');
+              wrapper.className = 'page-wrapper';
+              wrapper.innerHTML = `
+                <div class="page-top-badge">${handle}</div>
+                <img src="dafyane bookArtboard ${i}.jpg" alt="پەڕەی ${i}" class="page-image" loading="lazy">
+              `;
+              bookContainer.appendChild(wrapper);
+            }
+
             document.getElementById('access-denied').style.display = 'none';
             document.getElementById('book-content').style.display = 'flex';
           } else {
-            // ئەگەر ئەندام نەبێت -> بلۆکی بکە
             document.getElementById('access-denied').style.display = 'flex';
             document.getElementById('book-content').style.display = 'none';
           }
