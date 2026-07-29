@@ -8,13 +8,19 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
   <style>
+    /* 🎨 فۆنتی سێرکەوتوو (unisirwan zak) */
+    @font-face {
+      font-family: 'unisirwan zak';
+      src: local('unisirwan zak'), local('Uni Sirwan Zak');
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-touch-callout: none; /* 🚫 ڕێگری لە مێنیوی Long-Press ی ئایفۆن و ئەندرۆید */
+      -webkit-touch-callout: none; /* 🚫 ڕێگری لە مێنیوی Long-Press */
     }
 
     body {
@@ -28,10 +34,22 @@
       padding: 10px 0;
     }
 
-    /* 🏷️ واتەرمارکی سووچی لای چەپ - بێ باکگراوند، سایزی بچووک */
+    /* 📊 ٥. هێڵی بەرەوپێشچوون لە سەرەوەی شاشە */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff9f43, #ff5252);
+      width: 0%;
+      z-index: 2000;
+      transition: width 0.1s ease-out;
+    }
+
+    /* 🏷️ واتەرمارکی سووچی لای چەپ */
     .top-header-watermark {
       position: fixed;
-      top: 8px;
+      top: 12px;
       left: 10px;
       background: transparent;
       color: rgba(255, 255, 255, 0.65);
@@ -43,10 +61,156 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
 
+    /* 🍔 دگمەی مێنیو (سێ خەتەکە) لە سووچی ڕاست */
+    #menu-btn {
+      position: fixed;
+      top: 10px;
+      right: 12px;
+      z-index: 1300;
+      background: rgba(30, 30, 30, 0.85);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    #menu-btn span {
+      width: 20px;
+      height: 2px;
+      background-color: #ffffff;
+      border-radius: 2px;
+    }
+
+    /* 📖 ٢. پێڕستی بابەتەکان (TOC Sidebar - نیوەی شاشە) */
+    #toc-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(3px);
+      z-index: 1400;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #toc-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
+    #toc-sidebar {
+      position: fixed;
+      top: 0;
+      right: -60%;
+      width: 55%; /* 📐 داگیرکردنی نیوەی شاشە */
+      max-width: 320px;
+      min-width: 240px;
+      height: 100%;
+      background: #1a1a1b;
+      z-index: 1500;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.8);
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      font-family: 'unisirwan zak', 'Segoe UI', Tahoma, sans-serif;
+      direction: rtl;
+    }
+
+    #toc-sidebar.open {
+      right: 0;
+    }
+
+    .toc-header {
+      padding: 16px;
+      background: #242426;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc-header h3 {
+      font-size: 15px;
+      color: #ff9f43;
+      font-weight: bold;
+    }
+
+    .toc-close-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .toc-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 8px;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-item {
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #dddddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toc-item:active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .toc-item .page-num {
+      font-size: 11px;
+      color: #888;
+      background: #28282a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* 📌 تایتڵە بۆڵدەکان یان سێكشنە سەرەکییەکان */
+    .toc-section-title {
+      font-weight: bold;
+      color: #ff9f43;
+      font-size: 14px;
+      padding: 12px 8px 6px 8px;
+      margin-top: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .toc-sub-item {
+      padding-right: 20px; /* چوونی کەمێک بەرەو ناوەوە بۆ ژێر-بەشەکان */
+    }
+
+    /* 📚 کانتێنەری پەڕەکان */
     .book-container {
       width: 100%;
       max-width: 650px;
       padding: 8px;
+      margin-top: 40px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -60,14 +224,14 @@
       border-radius: 6px;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      touch-action: pan-y; /* 🔍 ڕێگەدان بە سکڕۆڵی ئاسایی کاتێک زووم نەکراوە */
+      touch-action: pan-y;
     }
 
     .page-image {
       width: 100%;
       display: block;
       height: auto;
-      pointer-events: none; /* 🔒 ⚡ ڕێگری تەواو لە داونلۆد، کۆپی و داگرتنی پەنجە */
+      pointer-events: none;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
@@ -75,7 +239,6 @@
       will-change: transform;
     }
 
-    /* 🏷️ واتەرمارکی ناوەڕاستی لاپەڕەکان - سایزی زۆر بچووک و ئۆپاسیتی نزم */
     .page-center-watermark {
       position: absolute;
       top: 50%;
@@ -83,17 +246,14 @@
       transform: translate(-50%, -50%) rotate(-20deg);
       font-size: 10px;
       font-weight: normal;
-      color: rgba(0, 0, 0, 0.12); /* ڕەنگێکی زۆر کاڵ کە خوێندنەوە تێک نادات */
+      color: rgba(0, 0, 0, 0.12);
       pointer-events: none;
       z-index: 10;
       direction: ltr;
       font-family: monospace, sans-serif;
       white-space: nowrap;
-      user-select: none;
-      -webkit-user-select: none;
     }
 
-    /* 🔢 ژمارەی لاپەڕە لە خوارەوەی بەشی ناوەڕاست */
     .page-bottom-number {
       position: absolute;
       bottom: 6px;
@@ -110,7 +270,6 @@
       font-family: monospace, sans-serif;
     }
 
-    /* ⚠️ شاشەی ڕەتکردنەوەی دەستگەیشتن */
     #access-denied {
       display: flex;
       position: fixed;
@@ -151,12 +310,36 @@
 </head>
 <body>
 
-  <!-- واتەرمارکی سووچی چەپ -->
+  <!-- 📊 هێڵی بەرەوپێشچوون لە سەرەوە -->
+  <div id="progress-bar"></div>
+
+  <!-- 🏷️ واتەرمارکی چەپ -->
   <div id="top-watermark" class="top-header-watermark">
     🔒 Checking...
   </div>
 
-  <!-- شاشەی ڕەتکردنەوەی دەستگەیشتن -->
+  <!-- 🍔 دگمەی مێنیو -->
+  <button id="menu-btn" onclick="openTOC()" aria-label="مێنیو">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- 📖 سایدی باڕی پێڕستی بابەتەکان -->
+  <div id="toc-overlay" onclick="closeTOC()"></div>
+  <div id="toc-sidebar">
+    <div class="toc-header">
+      <h3>📖 پێڕستی بابەتەکان</h3>
+      <button class="toc-close-btn" onclick="closeTOC()">✕</button>
+    </div>
+    <div class="toc-content">
+      <ul class="toc-list" id="toc-list-container">
+        <!-- بە شێوازی داینامیکی دروست دەکرێت -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- ⚠️ شاشەی ڕەتکردنەوەی دەستگەیشتن -->
   <div id="access-denied">
     <h2>⚠️ دەستگەیشتن ڕەتکرایەوە</h2>
     <p>ئەم کتێبە تەنها بۆ ئەندامانی کەناڵی دەفیانە بەردەستە.<br>تکایە سەرەتا لە کەناڵەکەدا بەشدار ببە.</p>
@@ -168,7 +351,6 @@
   <div class="book-container" id="book-content" style="display: none;"></div>
 
   <script>
-    // 🛡️ ڕێگری لە داگرتنی کلیکی ڕاست یان ڕاکێشانی وێنەکان (Drag & Contextmenu)
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.addEventListener('dragstart', event => event.preventDefault());
 
@@ -181,16 +363,40 @@
 
     const user = tg.initDataUnsafe?.user;
 
+    // 📊 کۆنتڕۆڵکردنی هێڵی بەرەوپێشچوون بەپێی سکڕۆڵ
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (height > 0) {
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('progress-bar').style.width = scrolled + '%';
+      }
+    });
+
+    // 📖 کردنەوە و داخستنی مێنیوی پێڕست
+    function openTOC() {
+      document.getElementById('toc-sidebar').classList.add('open');
+      document.getElementById('toc-overlay').classList.add('active');
+    }
+
+    function closeTOC() {
+      document.getElementById('toc-sidebar').classList.remove('open');
+      document.getElementById('toc-overlay').classList.remove('active');
+    }
+
+    function scrollToPage(pageNum) {
+      closeTOC();
+      const target = document.getElementById(`page-wrapper-${pageNum}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
     // 🔍 فەنکشنی زوومکردن (Pinch & Double Tap Zoom)
     function enablePageZoom(wrapper) {
       const img = wrapper.querySelector('.page-image');
-      let scale = 1;
-      let lastScale = 1;
-      let startDist = 0;
-      let lastTap = 0;
-      let posX = 0, posY = 0;
-      let startX = 0, startY = 0;
-      let isDragging = false;
+      let scale = 1, lastScale = 1, startDist = 0, lastTap = 0;
+      let posX = 0, posY = 0, startX = 0, startY = 0, isDragging = false;
 
       wrapper.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
@@ -202,24 +408,16 @@
         } else if (e.touches.length === 1) {
           const now = Date.now();
           if (now - lastTap < 300) {
-            // دوو دەستلێدان (Double Tap)
-            if (scale > 1) {
-              scale = 1;
-              posX = 0;
-              posY = 0;
-            } else {
-              scale = 2.5;
-            }
+            if (scale > 1) { scale = 1; posX = 0; posY = 0; } 
+            else { scale = 2.5; }
             img.style.transition = 'transform 0.25s ease-out';
             applyTransform();
             e.preventDefault();
-          } else {
-            if (scale > 1) {
-              isDragging = true;
-              startX = e.touches[0].clientX - posX;
-              startY = e.touches[0].clientY - posY;
-              img.style.transition = 'none';
-            }
+          } else if (scale > 1) {
+            isDragging = true;
+            startX = e.touches[0].clientX - posX;
+            startY = e.touches[0].clientY - posY;
+            img.style.transition = 'none';
           }
           lastTap = now;
         }
@@ -249,9 +447,7 @@
         if (e.touches.length === 0) {
           isDragging = false;
           if (scale < 1.05) {
-            scale = 1;
-            posX = 0;
-            posY = 0;
+            scale = 1; posX = 0; posY = 0;
             img.style.transition = 'transform 0.2s ease-out';
             applyTransform();
           }
@@ -263,6 +459,58 @@
       }
     }
 
+    // 📜 زانیارییەکانی پێڕستی بابەتەکان
+    const tocData = [
+      { title: "پێشەکی", page: 3 },
+      { title: "سەرەتاکانی فێربوونی دەف", page: 6 },
+      { title: "فێربوونی نۆتە", page: 10 },
+      { title: "تیمپۆ", page: 13 },
+      { title: "ڕیتمەکان", isHeader: true },
+      { title: "حەی ئەڵڵا", page: 17, isSub: true },
+      { title: "مەداحی دووەم", page: 20, isSub: true },
+      { title: "زیکری دووەم", page: 22, isSub: true },
+      { title: "دائیم", page: 23, isSub: true },
+      { title: "سامبا", page: 26, isSub: true },
+      { title: "هەڵگرتن", page: 28, isSub: true },
+      { title: "حەددادی", page: 31, isSub: true },
+      { title: "ماڕش", page: 32, isSub: true },
+      { title: "ڤاڵس", page: 36, isSub: true },
+      { title: "مەداحی", page: 38, isSub: true },
+      { title: "جۆرجینا", page: 40, isSub: true },
+      { title: "هێوە", page: 43, isSub: true },
+      { title: "گەڕیان", page: 46, isSub: true },
+      { title: "بەلەدی + مەقسووم", page: 49, isSub: true },
+      { title: "بەشی دووەم تاکژەنی", page: 50, isHeader: true }
+    ];
+
+    function buildTOC() {
+      const container = document.getElementById('toc-list-container');
+      container.innerHTML = '';
+
+      tocData.forEach(item => {
+        if (item.isHeader && !item.page) {
+          const header = document.createElement('li');
+          header.className = 'toc-section-title';
+          header.innerText = item.title;
+          container.appendChild(header);
+        } else {
+          const li = document.createElement('li');
+          let classNames = 'toc-item';
+          if (item.isHeader) classNames += ' toc-section-title';
+          if (item.isSub) classNames += ' toc-sub-item';
+          
+          li.className = classNames;
+          li.onclick = () => scrollToPage(item.page);
+          
+          li.innerHTML = `
+            <span>${item.title}</span>
+            <span class="page-num">ل ${item.page}</span>
+          `;
+          container.appendChild(li);
+        }
+      });
+    }
+
     if (user && user.id) {
       const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
       const handle = user.username ? `@${user.username}` : `ID: ${user.id}`;
@@ -270,47 +518,36 @@
 
       document.getElementById('top-watermark').innerText = watermarkText;
 
-      // پشکنینی ئەندامبوون لە کەناڵدا
       fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${user.id}`)
         .then(res => res.json())
         .then(data => {
           if (data.ok && ['creator', 'administrator', 'member'].includes(data.result.status)) {
             
-            // 📚 دروستکردنی لیستی ناوی فایلی وێنەکان
             const imageList = [];
-
-            // لاپەڕەکانی ١ تا ١٦
-            for (let i = 1; i <= 16; i++) {
-              imageList.push(`dafyane bookArtboard ${i}.jpg`);
-            }
-
-            // سێ ئاتبۆردەکەی لاپەڕەی ١٧ (ڕێزبەندییە ڕاستەکەی)
+            for (let i = 1; i <= 16; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
             imageList.push("dafyane bookArtboard 17.jpg");
             imageList.push("dafyane bookArtboard 17 copy_1.jpg");
             imageList.push("dafyane bookArtboard 17 copy_2.jpg");
+            for (let i = 18; i <= 56; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
 
-            // لاپەڕەکانی ١٨ تا ٥٦
-            for (let i = 18; i <= 56; i++) {
-              imageList.push(`dafyane bookArtboard ${i}.jpg`);
-            }
-
-            // بارکردنی تەواوی وێنەکان
             const bookContainer = document.getElementById('book-content');
             bookContainer.innerHTML = '';
 
             imageList.forEach((fileName, index) => {
               const wrapper = document.createElement('div');
+              const pageNum = index + 1;
               wrapper.className = 'page-wrapper';
+              wrapper.id = `page-wrapper-${pageNum}`;
               wrapper.innerHTML = `
                 <div class="page-center-watermark">${watermarkText}</div>
-                <img src="${fileName}" alt="پەڕەی ${index + 1}" class="page-image" loading="lazy">
-                <div class="page-bottom-number">${index + 1}</div>
+                <img src="${fileName}" alt="پەڕەی ${pageNum}" class="page-image" loading="lazy">
+                <div class="page-bottom-number">${pageNum}</div>
               `;
               bookContainer.appendChild(wrapper);
-
-              // ⚡ چالاککردنی زووم بۆ ئەم لاپەڕەیە
               enablePageZoom(wrapper);
             });
+
+            buildTOC();
 
             document.getElementById('access-denied').style.display = 'none';
             document.getElementById('book-content').style.display = 'flex';
