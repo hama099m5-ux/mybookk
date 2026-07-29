@@ -89,7 +89,7 @@
       border-radius: 2px;
     }
 
-    /* 📖 ٢. پێڕستی بابەتەکان (TOC Sidebar - نیوەی شاشە) */
+    /* 📖 پێڕستی بابەتەکان (TOC Sidebar - نیوەی شاشە) */
     #toc-overlay {
       position: fixed;
       top: 0;
@@ -182,15 +182,6 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
-    .toc-item .page-num {
-      font-size: 11px;
-      color: #888;
-      background: #28282a;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-
     /* 📌 تایتڵە بۆڵدەکان یان سێكشنە سەرەکییەکان */
     .toc-section-title {
       font-weight: bold;
@@ -202,7 +193,41 @@
     }
 
     .toc-sub-item {
-      padding-right: 20px; /* چوونی کەمێک بەرەو ناوەوە بۆ ژێر-بەشەکان */
+      padding-right: 20px;
+    }
+
+    /* ✉️ بەشی پەیوەندیکردن لە خوارەوەی مێنیو */
+    .toc-footer {
+      padding: 14px 12px;
+      background: #242426;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      font-size: 12px;
+      color: #b0b0b0;
+    }
+
+    .toc-footer p {
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #888;
+    }
+
+    .toc-footer a {
+      color: #ff9f43;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13px;
+      direction: ltr;
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(255, 159, 67, 0.1);
+      border: 1px solid rgba(255, 159, 67, 0.3);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .toc-footer a:active {
+      background: rgba(255, 159, 67, 0.25);
     }
 
     /* 📚 کانتێنەری پەڕەکان */
@@ -336,6 +361,11 @@
       <ul class="toc-list" id="toc-list-container">
         <!-- بە شێوازی داینامیکی دروست دەکرێت -->
       </ul>
+    </div>
+    <!-- ✉️ بەشی پەیوەندیکردن لە خوارەوەی مێنیو -->
+    <div class="toc-footer">
+      <p>بۆ وەڵامدانەوەی پرسیارەکانتان:</p>
+      <a href="https://t.me/muhamad5442" target="_blank">@muhamad5442</a>
     </div>
   </div>
 
@@ -500,12 +530,11 @@
           if (item.isSub) classNames += ' toc-sub-item';
           
           li.className = classNames;
-          li.onclick = () => scrollToPage(item.page);
+          if (item.page) {
+            li.onclick = () => scrollToPage(item.page);
+          }
           
-          li.innerHTML = `
-            <span>${item.title}</span>
-            <span class="page-num">ل ${item.page}</span>
-          `;
+          li.innerHTML = `<span>${item.title}</span>`;
           container.appendChild(li);
         }
       });
