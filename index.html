@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>کتێبی دیجیتاڵیی دەفیانە</title>
+  
   <!-- Telegram Web App Script -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
   <style>
-    /* 🎨 فۆنتی سێرکەوتوو (unisirwan zak) */
+    /* 🎨 فۆنتی تایبەت (unisirwan zak) */
     @font-face {
       font-family: 'unisirwan zak';
       src: local('unisirwan zak'), local('Uni Sirwan Zak');
@@ -34,7 +35,7 @@
       padding: 10px 0;
     }
 
-    /* 📊 ٥. هێڵی بەرەوپێشچوون لە سەرەوەی شاشە */
+    /* 📊 هێڵی بەرەوپێشچوون لە سەرەوەی شاشە */
     #progress-bar {
       position: fixed;
       top: 0;
@@ -61,7 +62,7 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
 
-    /* 🍔 دگمەی مێنیو (سێ خەتەکە) لە سووچی ڕاست */
+    /* 🍔 دگمەی مێنیو لە سووچی ڕاست */
     #menu-btn {
       position: fixed;
       top: 10px;
@@ -89,7 +90,7 @@
       border-radius: 2px;
     }
 
-    /* 📖 پێڕستی بابەتەکان (TOC Sidebar - نیوەی شاشە) */
+    /* 📖 پێڕستی بابەتەکان (TOC Sidebar) */
     #toc-overlay {
       position: fixed;
       top: 0;
@@ -113,7 +114,7 @@
       position: fixed;
       top: 0;
       right: -60%;
-      width: 55%; /* 📐 داگیرکردنی نیوەی شاشە */
+      width: 55%;
       max-width: 320px;
       min-width: 240px;
       height: 100%;
@@ -136,8 +137,9 @@
       background: #242426;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
     }
 
     .toc-header h3 {
@@ -146,7 +148,17 @@
       font-weight: bold;
     }
 
+    .toc-header h6 {
+      font-size: 11px;
+      color: #aaa;
+      font-weight: normal;
+      margin-top: 4px;
+    }
+
     .toc-close-btn {
+      position: absolute;
+      top: 14px;
+      left: 14px;
       background: none;
       border: none;
       color: #aaa;
@@ -182,7 +194,7 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
-    /* 📌 تایتڵە بۆڵدەکان یان سێكشنە سەرەکییەکان */
+    /* 📌 تایتڵە سەرەکییەکان یان سێكشنەکان */
     .toc-section-title {
       font-weight: bold;
       color: #ff9f43;
@@ -230,7 +242,7 @@
       background: rgba(255, 159, 67, 0.25);
     }
 
-    /* 📚 کانتێنەری پەڕەکان */
+    /* 📚 کانتێنەری لاپەڕەکان */
     .book-container {
       width: 100%;
       max-width: 650px;
@@ -295,6 +307,7 @@
       font-family: monospace, sans-serif;
     }
 
+    /* ⚠️ شاشەی ڕەتکردنەوەی دەستگەیشتن */
     #access-denied {
       display: flex;
       position: fixed;
@@ -335,10 +348,10 @@
 </head>
 <body>
 
-  <!-- 📊 هێڵی بەرەوپێشچوون لە سەرەوە -->
+  <!-- 📊 هێڵی بەرەوپێشچوون -->
   <div id="progress-bar"></div>
 
-  <!-- 🏷️ واتەرمارکی چەپ -->
+  <!-- 🏷️ واتەرمارکی سەرەوە -->
   <div id="top-watermark" class="top-header-watermark">
     🔒 Checking...
   </div>
@@ -350,23 +363,22 @@
     <span></span>
   </button>
 
-  <!-- 📖 سایدی باڕی پێڕستی بابەتەکان -->
+  <!-- 📖 پێڕستی بابەتەکان -->
   <div id="toc-overlay" onclick="closeTOC()"></div>
   <div id="toc-sidebar">
     <div class="toc-header">
-      <h3>📖 پێڕستی دەفیانە</h3> <br>
-      <h6> کلیک لەو وانەیە بکە کە دەتەوێت.. </h6>
+      <h3>📖 پێڕستی دەفیانە</h3>
+      <h6>کلیک لەو وانەیە بکە کە دەتەوێت..</h6>
       <button class="toc-close-btn" onclick="closeTOC()">✕</button>
     </div>
     <div class="toc-content">
       <ul class="toc-list" id="toc-list-container">
-        <!-- بە شێوازی داینامیکی دروست دەکرێت -->
+        <!-- بە داینامیکی دروست دەکرێت -->
       </ul>
     </div>
-    <!-- ✉️ بەشی پەیوەندیکردن لە خوارەوەی مێنیو -->
     <div class="toc-footer">
       <p>بۆ وەڵامدانەوەی پرسیارەکانتان:</p>
-      <a href="https://t.me/muhamad5442" target="_blank"> بەڕێوەبەر </a>
+      <a href="https://t.me/muhamad5442" target="_blank">بەڕێوەبەر</a>
     </div>
   </div>
 
@@ -375,10 +387,10 @@
     <h2>⚠️ دەستگەیشتن ڕەتکرایەوە</h2>
     <p>ئەم کتێبە تەنها بۆ ئەندامانی کەناڵی دەفیانە بەردەستە.<br>تکایە سەرەتا لە کەناڵەکەدا بەشدار ببە.</p>
     <h6>بۆ بەشداری کردن پەیوەندیمان پێوە بکە:</h6>
-    <h6> Instagram: defyane_kurd </h6>
+    <h6>Instagram: defyane_kurd</h6>
   </div>
 
-  <!-- کانتێنەری لاپەڕەکان -->
+  <!-- 📚 کانتێنەری لاپەڕەکان -->
   <div class="book-container" id="book-content" style="display: none;"></div>
 
   <script>
@@ -394,7 +406,7 @@
 
     const user = tg.initDataUnsafe?.user;
 
-    // 📊 کۆنتڕۆڵکردنی هێڵی بەرەوپێشچوون بەپێی سکڕۆڵ
+    // 📊 کۆنتڕۆڵکردنی هێڵی بەرەوپێشچوون
     window.addEventListener('scroll', () => {
       const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -511,7 +523,8 @@
       { title: "هێوە", page: 43, isSub: true },
       { title: "گەڕیان", page: 46, isSub: true },
       { title: "بەلەدی + مەقسووم", page: 49, isSub: true },
-      { title: "بەشی دووەم تاکژەنی", page: 50, isHeader: true }
+      { title: "بەشی دووەم تاکژەنی", page: 50, isHeader: true },
+      { title: "فێربوونی ڕیز", page: 55, isSub: true }
     ];
 
     function buildTOC() {
