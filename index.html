@@ -298,10 +298,10 @@
       font-family: monospace, sans-serif;
     }
 
-    /* 🎵 کانتێنەر و دگمەی دەنگ/ڤیدیۆ لە ناوەڕاستی خوارەوەی لاپەڕە */
+    /* 🎵 کانتێنەر و دگمەی دەنگ/ڤیدیۆ - نوێکراوە */
     .video-btn-container {
       position: absolute;
-      bottom: 12px;
+      bottom: 26px; /* 👈 بۆ ئەوەی نەکەوێتە سەر ژمارەی لاپەڕە */
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
@@ -315,28 +315,29 @@
     .video-play-btn {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, #ff9f43, #ff5252);
-      color: #ffffff;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
+      gap: 5px;
+      background: #f0f0f0; /* 👈 ڕەنگی ڕەساسی کاڵ */
+      color: #222222; /* 👈 نووسینی تۆخ تا بەڕوونی دیار بێت */
+      border: 1px solid #d1d1d1;
+      padding: 4px 11px; /* 👈 قەبارەی بچووکتر */
+      border-radius: 16px;
+      font-size: 11px; /* 👈 فۆنتی بچووکتر */
       font-weight: bold;
       font-family: 'unisirwan zak', system-ui, sans-serif;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
       cursor: pointer;
-      transition: transform 0.15s ease;
+      transition: transform 0.15s ease, background 0.15s ease;
     }
 
     .video-play-btn:active {
-      transform: translateX(-50%) scale(0.94);
+      transform: scale(0.94);
+      background: #e2e2e2;
     }
 
     .video-play-btn svg {
-      width: 15px;
-      height: 15px;
-      fill: #ffffff;
+      width: 13px; /* 👈 ئایکۆنی بچووکتر */
+      height: 13px;
+      fill: #222222;
     }
 
     /* 🎬 شاشەی دروستکراوی پۆپئەپ بۆ لێدانی ڤیدیۆ (Modal) */
@@ -490,7 +491,7 @@
 
     const WORKER_URL = "https://sparkling-hill-0f7d.hama099m5.workers.dev";
 
-    // 🎵 بەشی لینکی وانەکان (ژمارەی لاپەڕە : لایەنی ناوەرۆک و لینک)
+    // 🎵 بەشی لینکی وانەکان
     const directVideoLinks = {
       18: [
         {
@@ -699,7 +700,7 @@
               wrapper.className = 'page-wrapper';
               wrapper.id = `page-wrapper-${pageNum}`;
 
-              // 🎵 دروستکردنی دگمەی لێدانی دەنگ/ڤیدیۆ بە ئایکۆنی میوزیک
+              // 🎵 دروستکردنی دگمەی دەنگ/ڤیدیۆ بە ئایکۆنی میوزیک
               let videoHtml = '';
               if (directVideoLinks[pageNum] && directVideoLinks[pageNum].length > 0) {
                 const links = directVideoLinks[pageNum];
