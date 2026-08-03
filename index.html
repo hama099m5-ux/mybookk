@@ -298,10 +298,10 @@
       font-family: monospace, sans-serif;
     }
 
-    /* 🎵 کانتێنەر و دگمەی دەنگ/ڤیدیۆ - نوێکراوە */
-    .video-btn-container {
+    /* 🎥 کانتێنەری دگمەکان (یوتیوب و تیمپۆ) */
+    .media-btn-container {
       position: absolute;
-      bottom: 26px; /* 👈 بۆ ئەوەی نەکەوێتە سەر ژمارەی لاپەڕە */
+      bottom: 26px; /* 👈 بۆ ئەوەی لەسەر ژمارەی لاپەڕە نەبێت */
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
@@ -310,18 +310,48 @@
       justify-content: center;
       align-items: center;
       width: max-content;
+      flex-wrap: wrap;
     }
 
+    /* ▶️ دگمەی یوتیوب */
+    .youtube-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #ff0000;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: bold;
+      font-family: system-ui, sans-serif;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .youtube-btn:active {
+      transform: scale(0.92);
+      background: #cc0000;
+    }
+
+    .youtube-btn svg {
+      width: 13px;
+      height: 13px;
+      fill: #ffffff;
+    }
+
+    /* 🎵 دگمەی دەنگی Supabase (تیمپۆ) */
     .video-play-btn {
       display: flex;
       align-items: center;
       gap: 5px;
-      background: #f0f0f0; /* 👈 ڕەنگی ڕەساسی کاڵ */
-      color: #222222; /* 👈 نووسینی تۆخ تا بەڕوونی دیار بێت */
+      background: #f0f0f0;
+      color: #222222;
       border: 1px solid #d1d1d1;
-      padding: 4px 11px; /* 👈 قەبارەی بچووکتر */
+      padding: 4px 11px;
       border-radius: 16px;
-      font-size: 11px; /* 👈 فۆنتی بچووکتر */
+      font-size: 11px;
       font-weight: bold;
       font-family: 'unisirwan zak', system-ui, sans-serif;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -335,12 +365,12 @@
     }
 
     .video-play-btn svg {
-      width: 13px; /* 👈 ئایکۆنی بچووکتر */
+      width: 13px;
       height: 13px;
       fill: #222222;
     }
 
-    /* 🎬 شاشەی دروستکراوی پۆپئەپ بۆ لێدانی ڤیدیۆ (Modal) */
+    /* 🎬 شاشەی پۆپئەپ بۆ لێدانی ڤیدیۆی ناوخۆیی */
     #video-modal {
       position: fixed;
       top: 0;
@@ -466,7 +496,7 @@
     </div>
   </div>
 
-  <!-- 🎬 پۆپئەپی لێدانی ڤیدیۆ لەناو ئەپەکەدا -->
+  <!-- 🎬 پۆپئەپی لێدانی ڤیدیۆ -->
   <div id="video-modal">
     <div class="video-modal-content">
       <button class="video-modal-close" onclick="closeVideoModal()">✕</button>
@@ -491,7 +521,18 @@
 
     const WORKER_URL = "https://sparkling-hill-0f7d.hama099m5.workers.dev";
 
-    // 🎵 بەشی لینکی وانەکان
+    // 🎥 لینکەکانی یوتیوب (لاپەڕە : لیستی لینکەکان)
+    const youtubeLinks = {
+      6: [
+        "https://www.youtube.com/watch?v=iRR7GB3jlUs"
+      ],
+      11: [
+        "https://www.youtube.com/shorts/BXQxtALlju0",
+        "https://www.youtube.com/watch?v=LVOjKCztqTs"
+      ]
+    };
+
+    // 🎵 لینکە ڕاستەوخۆکانی Supabase (تیمپۆ)
     const directVideoLinks = {
       18: [
         {
@@ -536,7 +577,7 @@
       }
     }
 
-    // 🎬 فەنکشنەکانی پۆپئەپی ڤیدیۆ (Modal)
+    // 🎬 فەنکشنەکانی پۆپئەپی ڤیدیۆ
     function openVideoModal(videoUrl) {
       const modal = document.getElementById('video-modal');
       const player = document.getElementById('app-video-player');
@@ -700,11 +741,26 @@
               wrapper.className = 'page-wrapper';
               wrapper.id = `page-wrapper-${pageNum}`;
 
-              // 🎵 دروستکردنی دگمەی دەنگ/ڤیدیۆ بە ئایکۆنی میوزیک
-              let videoHtml = '';
+              let buttonsHtml = '';
+
+              // 1. ئامادەکردنی دگمەی یوتیوب (ئەگەر لەم لاپەڕەیەدا هەبێت)
+              if (youtubeLinks[pageNum] && youtubeLinks[pageNum].length > 0) {
+                const links = youtubeLinks[pageNum];
+                buttonsHtml += links.map((url, idx) => {
+                  const label = links.length > 1 ? `ڤیدیۆی ${idx + 1}` : 'ڤیدیۆ';
+                  return `
+                    <a href="${url}" target="_blank" class="youtube-btn" aria-label="${label}">
+                      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                      <span>${label}</span>
+                    </a>
+                  `;
+                }).join('');
+              }
+
+              // 2. ئامادەکردنی دگمەی Supabase / تیمپۆ (ئەگەر لەم لاپەڕەیەدا هەبێت)
               if (directVideoLinks[pageNum] && directVideoLinks[pageNum].length > 0) {
                 const links = directVideoLinks[pageNum];
-                const buttonsHtml = links.map(item => {
+                buttonsHtml += links.map(item => {
                   const labelText = item.label || 'بینینی وانە';
                   const videoUrl = item.url || item;
                   return `
@@ -714,15 +770,15 @@
                     </button>
                   `;
                 }).join('');
-
-                videoHtml = `<div class="video-btn-container">${buttonsHtml}</div>`;
               }
+
+              const mediaHtml = buttonsHtml ? `<div class="media-btn-container">${buttonsHtml}</div>` : '';
 
               wrapper.innerHTML = `
                 <div class="page-center-watermark">${watermarkText}</div>
                 <img src="${fileName}" alt="پەڕەی ${pageNum}" class="page-image" loading="lazy">
                 <div class="page-bottom-number">${pageNum}</div>
-                ${videoHtml}
+                ${mediaHtml}
               `;
               bookContainer.appendChild(wrapper);
               enablePageZoom(wrapper);
