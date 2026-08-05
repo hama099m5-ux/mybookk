@@ -298,7 +298,7 @@
       font-family: monospace, sans-serif;
     }
 
-    /* 🎥 کانتێنەری دگمەکان (یوتیوب و تیمپۆ) */
+    /* 🎥 کانتێنەری دگمەکان (یوتیوب و دەنگ/ڤیدیۆ) */
     .media-btn-container {
       position: absolute;
       bottom: 26px; /* 👈 بۆ ئەوەی لەسەر ژمارەی لاپەڕە نەبێت */
@@ -341,33 +341,33 @@
       fill: #ffffff;
     }
 
-    /* 🎵 دگمەی دەنگی Supabase (تیمپۆ) */
+    /* 🎵 دگمەی ڤیدیۆی شێوازی ژەنین (سوور و بچووک) */
     .video-play-btn {
       display: flex;
       align-items: center;
       gap: 5px;
-      background: #f0f0f0;
-      color: #222222;
-      border: 1px solid #d1d1d1;
+      background: #e50914;
+      color: #ffffff;
+      border: none;
       padding: 4px 11px;
       border-radius: 16px;
       font-size: 11px;
       font-weight: bold;
       font-family: 'unisirwan zak', system-ui, sans-serif;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
       cursor: pointer;
       transition: transform 0.15s ease, background 0.15s ease;
     }
 
     .video-play-btn:active {
       transform: scale(0.94);
-      background: #e2e2e2;
+      background: #b91c1c;
     }
 
     .video-play-btn svg {
       width: 13px;
       height: 13px;
-      fill: #222222;
+      fill: #ffffff;
     }
 
     /* 🎬 شاشەی پۆپئەپ بۆ لێدانی ڤیدیۆی ناوخۆیی */
@@ -532,12 +532,102 @@
       ]
     };
 
-    // 🎵 لینکە ڕاستەوخۆکانی Supabase (تیمپۆ)
+    // 🎵 لینکە ڕاستەوخۆکانی Supabase (ڤیدیۆکانی شێوازی ژەنین)
     const directVideoLinks = {
+      15: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/1SARATA.mp4"
+        }
+      ],
+      16: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/2SARATA.mp4"
+        }
+      ],
       18: [
         {
-          label: "گوێ لە تیمپۆ بگرە",
-          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/3hayallah.mp4"
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/3HAYALLAH.mp4"
+        }
+      ],
+      21: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/4MADAHISWAM.mp4"
+        }
+      ],
+      22: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/5ZIKIRI.mp4"
+        }
+      ],
+      24: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/5DAIM.mp4"
+        }
+      ],
+      27: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/6SAMBA.mp4"
+        }
+      ],
+      29: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/7HALGRTN.mp4"
+        }
+      ],
+      31: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/8HADDADI.mp4"
+        }
+      ],
+      33: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/9MARCH.mp4"
+        }
+      ],
+      37: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/10VALSE.mp4"
+        }
+      ],
+      38: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/11MADAHI.mp4"
+        }
+      ],
+      41: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/12JORJINA.mp4"
+        }
+      ],
+      44: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/13HEWA.mp4"
+        }
+      ],
+      47: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/14GARYAN.mp4"
+        }
+      ],
+      49: [
+        {
+          label: "شێوازی ژەنین",
+          url: "https://tmjiymugrfnkokpcvflj.supabase.co/storage/v1/object/public/videos/15KOT.mp4"
         }
       ]
     };
@@ -757,11 +847,11 @@
                 }).join('');
               }
 
-              // 2. ئامادەکردنی دگمەی Supabase / تیمپۆ (ئەگەر لەم لاپەڕەیەدا هەبێت)
+              // 2. ئامادەکردنی دگمەی Supabase (شێوازی ژەنین)
               if (directVideoLinks[pageNum] && directVideoLinks[pageNum].length > 0) {
                 const links = directVideoLinks[pageNum];
                 buttonsHtml += links.map(item => {
-                  const labelText = item.label || 'بینینی وانە';
+                  const labelText = item.label || 'شێوازی ژەنین';
                   const videoUrl = item.url || item;
                   return `
                     <button class="video-play-btn" onclick="openVideoModal('${videoUrl}')">
