@@ -365,7 +365,7 @@
     }
 
     .video-play-btn.active-btn {
-      background: #22c55e; /* سەوز دەبێت کاتێک کڵیک دەکرێت */
+      background: #22c55e;
     }
 
     .video-play-btn svg {
@@ -417,7 +417,7 @@
 
     .inline-video-element {
       width: 100%;
-      max-height: 240px; /* نزیکەی ٣٠٪ی بەرزی شاشە بگرێت تا سەرەوەی لاپەڕەکە بەتەواوی دیاربێت */
+      max-height: 240px;
       display: block;
       outline: none;
       background: #000;
@@ -567,7 +567,6 @@
       const player = document.getElementById(`inline-player-${pageNum}`);
       const btn = document.getElementById(`vbtn-${pageNum}`);
 
-      // داخستنی هەموو ڤیدیۆکانی تر ئەگەر کراوەبن
       document.querySelectorAll('.inline-video-box').forEach(otherBox => {
         if (otherBox.id !== `inline-box-${pageNum}`) {
           otherBox.classList.remove('active');
@@ -589,7 +588,6 @@
 
       if (!box) return;
 
-      // ئەگەر لە پێشتریدا کراوە بووبێت -> دایبخە
       if (box.classList.contains('active')) {
         if (player) {
           player.pause();
@@ -602,7 +600,6 @@
           if (txt) txt.innerText = 'شێوازی ژەنین';
         }
       } else {
-        // ئەگەر کراوە نەبووبێت -> بیکەرەوە و لێی بدە
         if (player && videoUrl) {
           player.src = videoUrl;
           box.classList.add('active');
@@ -673,7 +670,7 @@
           isDragging = false;
           if (scale < 1.05) {
             scale = 1; posX = 0; posY = 0;
-            img.style.transition = 'transform 0.2s ease-out';
+            img.style.transition = 'transform 0.20s ease-out';
             applyTransform();
           }
         }
@@ -684,7 +681,7 @@
       }
     }
 
-    // 📜 پێڕستی بابەتەکان
+    // 📜 پێڕستی بابەتەکان (زیادکردنی یەڵدایی بۆ لاپەڕە ٥٠ و نوێکردنەوەی ناونیشانەکانی دواتر)
     const tocData = [
       { title: "پێشەکی", page: 3 },
       { title: "سەرەتاکانی فێربوونی دەف", page: 6 },
@@ -705,8 +702,9 @@
       { title: "هێوە", page: 43, isSub: true },
       { title: "گەڕیان", page: 46, isSub: true },
       { title: "بەلەدی + مەقسووم", page: 49, isSub: true },
-      { title: "بەشی دووەم تاکژەنی", page: 50, isHeader: true },
-      { title: "فێربوونی ڕیز", page: 55, isSub: true }
+      { title: "یەڵدایی", page: 50, isSub: true },
+      { title: "بەشی دووەم تاکژەنی", page: 53, isHeader: true },
+      { title: "فێربوونی ڕیز", page: 58, isSub: true }
     ];
 
     function buildTOC() {
@@ -749,11 +747,20 @@
           if (data.isMember) {
             
             const imageList = [];
+            // لاپەڕەکانی ١ تا ٤٩
             for (let i = 1; i <= 16; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
             imageList.push("dafyane bookArtboard 17.jpg");
             imageList.push("dafyane bookArtboard 17 copy_1.jpg");
             imageList.push("dafyane bookArtboard 17 copy_2.jpg");
-            for (let i = 18; i <= 56; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
+            for (let i = 18; i <= 47; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
+
+            // لاپەڕەکانی ٥٠، ٥١، ٥٢ی نوێ
+            imageList.push("dafyane bookArtboard 57.jpg");
+            imageList.push("dafyane bookArtboard 58.jpg");
+            imageList.push("dafyane bookArtboard 59.jpg");
+
+            // لاپەڕەکانی دواتر (٥٣ بەرەو سەرەوە)
+            for (let i = 48; i <= 56; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
 
             const bookContainer = document.getElementById('book-content');
             bookContainer.innerHTML = '';
@@ -767,7 +774,7 @@
               let buttonsHtml = '';
               let hasDirectVideo = false;
 
-              // 1. دگمەی یوتیوب
+              // ١. دگمەی یوتیوب
               if (youtubeLinks[pageNum] && youtubeLinks[pageNum].length > 0) {
                 const links = youtubeLinks[pageNum];
                 buttonsHtml += links.map((url, idx) => {
@@ -781,7 +788,7 @@
                 }).join('');
               }
 
-              // 2. دگمەی ژەنینی ڤیدیۆی ناوخۆیی (Supabase)
+              // ٢. دگمەی ژەنینی ڤیدیۆی ناوخۆیی (Supabase)
               if (directVideoLinks[pageNum] && directVideoLinks[pageNum].length > 0) {
                 hasDirectVideo = true;
                 const videoUrl = directVideoLinks[pageNum][0];
