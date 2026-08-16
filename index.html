@@ -374,7 +374,7 @@
       fill: #ffffff;
     }
 
-    /* 🎬 پەنجەرەی ڤیدیۆی دروستکراو لەناو لاپەڕەکەدا (Inline Video Box) */
+    /* 🎬 پەنجەرەی ڤیدیۆی دروستکراو لەناو لاپەڕەکەدا */
     .inline-video-box {
       display: none;
       width: 100%;
@@ -422,6 +422,36 @@
       outline: none;
       background: #000;
       object-fit: contain;
+    }
+
+    /* 🔁 کۆنتڕۆڵی خوارەوەی ڤیدیۆ بۆ دوگمەی لووپ */
+    .custom-video-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 12px;
+      background: #18181a;
+    }
+
+    .loop-toggle-btn {
+      background: transparent;
+      color: #b0b0b0;
+      border: 1px solid #555;
+      padding: 5px 14px;
+      border-radius: 14px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'unisirwan zak', system-ui, sans-serif;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .loop-toggle-btn.active {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border-color: #22c55e;
     }
 
     /* ⚠️ شاشەی ڕەتکردنەوەی دەستگەیشتن */
@@ -565,6 +595,22 @@
       }
     }
 
+    // 🔁 فەنکشنی چالاککردنی دووبارەبوونەوەی ڤیدیۆ
+    function toggleLoop(pageNum) {
+      const video = document.getElementById(`inline-player-${pageNum}`);
+      const btn = document.getElementById(`loop-btn-${pageNum}`);
+      
+      if (!video || !btn) return;
+
+      if (video.loop) {
+        video.loop = false;
+        btn.classList.remove('active');
+      } else {
+        video.loop = true;
+        btn.classList.add('active');
+      }
+    }
+
     // 🎬 فەنکشنی لێدان و داخستنی ڤیدیۆ لەناو هەمان لاپەڕە (Inline Player)
     function toggleInlineVideo(pageNum, videoUrl) {
       const box = document.getElementById(`inline-box-${pageNum}`);
@@ -606,6 +652,12 @@
       } else {
         if (player && videoUrl) {
           player.src = videoUrl;
+          
+          // هەرجارێک ڤیدیۆکە دەکرێتەوە لووپ ناچالاک بێت وەکو بنەڕەت
+          player.loop = false;
+          const loopBtn = document.getElementById(`loop-btn-${pageNum}`);
+          if (loopBtn) loopBtn.classList.remove('active');
+
           box.classList.add('active');
           if (btn) {
             btn.classList.add('active-btn');
@@ -685,7 +737,7 @@
       }
     }
 
-    // 📜 پێڕستی بابەتەکان (زیادکردنی یەڵدایی بۆ لاپەڕە ٥٠ و نوێکردنەوەی ناونیشانەکانی دواتر)
+    // 📜 پێڕستی بابەتەکان 
     const tocData = [
       { title: "پێشەکی", page: 3 },
       { title: "سەرەتاکانی فێربوونی دەف", page: 6 },
@@ -751,19 +803,16 @@
           if (data.isMember) {
             
             const imageList = [];
-            // لاپەڕەکانی ١ تا ٤٩
             for (let i = 1; i <= 16; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
             imageList.push("dafyane bookArtboard 17.jpg");
             imageList.push("dafyane bookArtboard 17 copy_1.jpg");
             imageList.push("dafyane bookArtboard 17 copy_2.jpg");
             for (let i = 18; i <= 47; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
 
-            // لاپەڕەکانی ٥٠، ٥١، ٥٢ی نوێ
             imageList.push("dafyane bookArtboard 57.jpg");
             imageList.push("dafyane bookArtboard 58.jpg");
             imageList.push("dafyane bookArtboard 59.jpg");
 
-            // لاپەڕەکانی دواتر (٥٣ بەرەو سەرەوە)
             for (let i = 48; i <= 56; i++) { imageList.push(`dafyane bookArtboard ${i}.jpg`); }
 
             const bookContainer = document.getElementById('book-content');
@@ -778,7 +827,6 @@
               let buttonsHtml = '';
               let hasDirectVideo = false;
 
-              // ١. دگمەی یوتیوب
               if (youtubeLinks[pageNum] && youtubeLinks[pageNum].length > 0) {
                 const links = youtubeLinks[pageNum];
                 buttonsHtml += links.map((url, idx) => {
@@ -792,7 +840,6 @@
                 }).join('');
               }
 
-              // ٢. دگمەی ژەنینی ڤیدیۆی ناوخۆیی (Supabase)
               if (directVideoLinks[pageNum] && directVideoLinks[pageNum].length > 0) {
                 hasDirectVideo = true;
                 const videoUrl = directVideoLinks[pageNum][0];
@@ -806,6 +853,7 @@
 
               const mediaBar = buttonsHtml ? `<div class="media-btn-container">${buttonsHtml}</div>` : '';
 
+              // لێرەدا کۆنتڕۆڵی دووبارەبوونەوە بۆ ژێر ڤیدیۆکە زیاد کراوە
               const videoBoxHtml = hasDirectVideo ? `
                 <div class="inline-video-box" id="inline-box-${pageNum}">
                   <div class="inline-video-bar">
@@ -813,6 +861,14 @@
                     <button class="inline-video-close-btn" onclick="toggleInlineVideo(${pageNum}, '')">✕ داخستن</button>
                   </div>
                   <video id="inline-player-${pageNum}" class="inline-video-element" controls playsinline webkit-playsinline controlsList="nodownload"></video>
+                  
+                  <div class="custom-video-controls">
+                    <button id="loop-btn-${pageNum}" class="loop-toggle-btn" onclick="toggleLoop(${pageNum})">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+                      (دووبارەبوونەوە)
+                    </button>
+                  </div>
+
                 </div>
               ` : '';
 
