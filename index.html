@@ -315,7 +315,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* 🎵 دگمەی ژەنینی ڤیدیۆ (بۆ هەردوو جۆرەکە چوونە یەک) */
+    /* 🎵 دگمەی ژەنینی ڤیدیۆ */
     .video-play-btn {
       display: inline-flex;
       align-items: center;
@@ -397,12 +397,14 @@
       object-fit: contain;
     }
 
-    /* ⏯️ چوارچێوەی لێدانی ڤیدیۆ (iframe) */
+    /* ⏯️ چوارچێوەی لێدانی ڤیدیۆ (iframe Wrapper) */
     .iframe-wrapper {
       position: relative;
       padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
       height: 0;
       width: 100%;
+      background: #000;
+      overflow: hidden;
     }
 
     .iframe-wrapper iframe {
@@ -412,6 +414,38 @@
       width: 100%;
       height: 100%;
       border: 0;
+    }
+
+    /* 🛡️ شێڵدی شاردنەوەی سەرەوە و نەهێشتنی کلیک لەسەر ناوی کەناڵ و یوتوب */
+    .yt-shield-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      background: #000000;
+      z-index: 10;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: #ff9f43;
+      font-size: 11px;
+      font-weight: bold;
+      font-family: 'unisirwan zak', system-ui, sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    }
+
+    /* 🛡️ شێڵدی نەهێشتنی کلیک لەسەر لۆگۆی خوارەوەی یوتوب */
+    .yt-shield-bottom-right {
+      position: absolute;
+      bottom: 0;
+      right: 35px;
+      width: 90px;
+      height: 42px;
+      background: transparent;
+      z-index: 10;
+      pointer-events: auto;
     }
 
     /* 🔁 کۆنتڕۆڵی خوارەوەی ڤیدیۆ بۆ دوگمەی لووپ */
@@ -636,7 +670,7 @@
       });
     }
 
-    // 🎬 فەنکشنی ژەنینی ڤیدیۆی دەرەکی لەناو هەمان لاپەڕە بەبێ دیاریکردنی لۆگۆ
+    // 🎬 فەنکشنی لێدانی ڤیدیۆ بە بێ لۆگۆ و بە داپۆشینی ناوی کەناڵ
     function toggleYoutubeInline(pageNum, idx, url) {
       const boxId = `yt-box-${pageNum}-${idx}`;
       const box = document.getElementById(boxId);
@@ -657,8 +691,12 @@
         stopAllMediaExcept(boxId);
         const ytId = getYoutubeId(url);
         if (ytId) {
-          // بەکارهێنانی youtube-nocookie و modestbranding بۆ شاردنەوەی ناوونیشان و نەناردن بۆ یوتوب
-          wrapper.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&controls=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+          // بەکارهێنانی شێڵدەکانی yt-shield-top و yt-shield-bottom-right بۆ ئەوەی ڕێگە بە کلیک نه‌دات بۆ سەر یوتوب
+          wrapper.innerHTML = `
+            <div class="yt-shield-top">🥁 شێوازی ژەنین</div>
+            <div class="yt-shield-bottom-right"></div>
+            <iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&controls=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          `;
           box.classList.add('active');
           if (btn) {
             btn.classList.add('active-btn');
@@ -868,7 +906,7 @@
               let youtubeBoxesHtml = '';
               let hasDirectVideo = false;
 
-              // 🎥 دگمەکان (گۆڕدراون بۆ ئایکۆنی ئاسایی و ناوی شێوازی ژەنین)
+              // 🎥 دگمەکان
               if (youtubeLinks[pageNum] && youtubeLinks[pageNum].length > 0) {
                 const links = youtubeLinks[pageNum];
                 buttonsHtml += links.map((url, idx) => {
