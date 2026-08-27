@@ -611,19 +611,21 @@
       }
     }
 
-    // 🎬 فەنکشنی لێدان و داخستنی ڤیدیۆ لەناو هەمان لاپەڕە (Inline Player)
+    // 🎬 فەنکشنی لێدان و داخستنی ڤیدیۆ لەناو هەمان لاپەڕە (گونجێنراو بۆ iOS Safari)
     function toggleInlineVideo(pageNum, videoUrl) {
       const box = document.getElementById(`inline-box-${pageNum}`);
       const player = document.getElementById(`inline-player-${pageNum}`);
       const btn = document.getElementById(`vbtn-${pageNum}`);
 
+      // داخستنی هەموو پلەیەرەکانی تر
       document.querySelectorAll('.inline-video-box').forEach(otherBox => {
         if (otherBox.id !== `inline-box-${pageNum}`) {
           otherBox.classList.remove('active');
           const otherPlayer = otherBox.querySelector('video');
           if (otherPlayer) {
             otherPlayer.pause();
-            otherPlayer.src = '';
+            otherPlayer.removeAttribute('src');
+            otherPlayer.load();
           }
         }
       });
@@ -641,7 +643,8 @@
       if (box.classList.contains('active')) {
         if (player) {
           player.pause();
-          player.src = '';
+          player.removeAttribute('src');
+          player.load();
         }
         box.classList.remove('active');
         if (btn) {
@@ -651,9 +654,11 @@
         }
       } else {
         if (player && videoUrl) {
-          player.src = videoUrl;
+          if (player.src !== videoUrl) {
+            player.src = videoUrl;
+            player.load(); // بارکردنەوەی ناچارەکی بۆ پشتیوانی ڕاستەوخۆی iOS
+          }
           
-          // هەرجارێک ڤیدیۆکە دەکرێتەوە لووپ ناچالاک بێت وەکو بنەڕەت
           player.loop = false;
           const loopBtn = document.getElementById(`loop-btn-${pageNum}`);
           if (loopBtn) loopBtn.classList.remove('active');
@@ -664,7 +669,13 @@
             const txt = btn.querySelector('span');
             if (txt) txt.innerText = 'داخستنی ڤیدیۆ ✕';
           }
-          player.play().catch(e => console.log('Autoplay handled:', e));
+          
+          const playPromise = player.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(e => {
+              console.log('Autoplay handled on iOS:', e);
+            });
+          }
         }
       }
     }
@@ -853,14 +864,13 @@
 
               const mediaBar = buttonsHtml ? `<div class="media-btn-container">${buttonsHtml}</div>` : '';
 
-              // لێرەدا کۆنتڕۆڵی دووبارەبوونەوە بۆ ژێر ڤیدیۆکە زیاد کراوە
               const videoBoxHtml = hasDirectVideo ? `
                 <div class="inline-video-box" id="inline-box-${pageNum}">
                   <div class="inline-video-bar">
                     <span class="inline-video-title">🎬 شێوازی ژەنین - لاپەڕەی ${pageNum}</span>
                     <button class="inline-video-close-btn" onclick="toggleInlineVideo(${pageNum}, '')">✕ داخستن</button>
                   </div>
-                  <video id="inline-player-${pageNum}" class="inline-video-element" controls playsinline webkit-playsinline controlsList="nodownload"></video>
+                  <video id="inline-player-${pageNum}" class="inline-video-element" controls playsinline webkit-playsinline preload="metadata" controlsList="nodownload"></video>
                   
                   <div class="custom-video-controls">
                     <button id="loop-btn-${pageNum}" class="loop-toggle-btn" onclick="toggleLoop(${pageNum})">
