@@ -530,6 +530,7 @@
     document.addEventListener('dragstart', event => event.preventDefault());
 
     const WORKER_URL = "https://sparkling-hill-0f7d.hama099m5.workers.dev";
+    const WORKER_BASE = "https://sparkling-hill-0f7d.hama099m5.workers.dev/play-video/";
 
     const youtubeLinks = {
       6: ["https://www.youtube.com/watch?v=iRR7GB3jlUs"],
@@ -537,27 +538,28 @@
       13: ["https://www.youtube.com/watch?v=cNhD7utblss"]
     };
 
+    // 🚀 نوێکراوەتەوە: گۆڕینی لینکەکان بۆ Cloudflare Worker Proxy
     const directVideoLinks = {
-      15: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/1SARATA.mp4"],
-      16: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/2SARATA.mp4"],
-      18: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/3HAYALLAH.mp4"],
-      21: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/4MADAHISWAM.mp4"],
-      22: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/5ZIKIRI.mp4"],
-      24: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/5DAIM.mp4"],
-      27: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/6SAMBA.mp4"],
-      29: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/7HALGRTN.mp4"],
-      31: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/8HADDADI.mp4"],
-      33: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/9MARCH.mp4"],
-      37: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/10VALSE.mp4"],
-      38: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/11MADAHI.mp4"],
-      41: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/12JORJINA.mp4"],
-      44: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/13HEWA.mp4"],
-      47: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/14GARYAN.mp4"],
-      49: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/15KOT.mp4"],
-      51: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/16yell.mp4"],
-      54: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/T1.mp4"],
-      55: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/T2.mp4"],
-      56: ["https://github.com/hama099m5-ux/mybookk/releases/download/v1.0.0/T3.mp4"]
+      15: [WORKER_BASE + "1SARATA.mp4"],
+      16: [WORKER_BASE + "2SARATA.mp4"],
+      18: [WORKER_BASE + "3HAYALLAH.mp4"],
+      21: [WORKER_BASE + "4MADAHISWAM.mp4"],
+      22: [WORKER_BASE + "5ZIKIRI.mp4"],
+      24: [WORKER_BASE + "5DAIM.mp4"],
+      27: [WORKER_BASE + "6SAMBA.mp4"],
+      29: [WORKER_BASE + "7HALGRTN.mp4"],
+      31: [WORKER_BASE + "8HADDADI.mp4"],
+      33: [WORKER_BASE + "9MARCH.mp4"],
+      37: [WORKER_BASE + "10VALSE.mp4"],
+      38: [WORKER_BASE + "11MADAHI.mp4"],
+      41: [WORKER_BASE + "12JORJINA.mp4"],
+      44: [WORKER_BASE + "13HEWA.mp4"],
+      47: [WORKER_BASE + "14GARYAN.mp4"],
+      49: [WORKER_BASE + "15KOT.mp4"],
+      51: [WORKER_BASE + "16yell.mp4"],
+      54: [WORKER_BASE + "T1.mp4"],
+      55: [WORKER_BASE + "T2.mp4"],
+      56: [WORKER_BASE + "T3.mp4"]
     };
 
     const tg = window.Telegram.WebApp;
