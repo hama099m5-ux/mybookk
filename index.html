@@ -315,38 +315,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .youtube-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: #ff0000;
-      color: #ffffff;
-      border: none;
-      padding: 5px 12px;
-      border-radius: 16px;
-      font-size: 11px;
-      font-weight: bold;
-      font-family: 'unisirwan zak', system-ui, sans-serif;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .youtube-btn:active {
-      transform: scale(0.92);
-    }
-
-    .youtube-btn.active-btn {
-      background: #22c55e;
-    }
-
-    .youtube-btn svg {
-      width: 13px;
-      height: 13px;
-      fill: #ffffff;
-    }
-
-    /* 🎵 دگمەی ژەنینی ڤیدیۆی ناوخۆیی */
+    /* 🎵 دگمەی ژەنینی ڤیدیۆ (بۆ هەردوو جۆرەکە چوونە یەک) */
     .video-play-btn {
       display: inline-flex;
       align-items: center;
@@ -378,7 +347,7 @@
       fill: #ffffff;
     }
 
-    /* 🎬 پەنجەرەی ڤیدیۆی ناوخۆیی و یوتوب لەناو لاپەڕەکەدا */
+    /* 🎬 پەنجەرەی ڤیدیۆ لەناو لاپەڕەکەدا */
     .inline-video-box {
       display: none;
       width: 100%;
@@ -386,10 +355,6 @@
       border-top: 2px solid #e50914;
       overflow: hidden;
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
-    }
-
-    .inline-video-box.yt-box-theme {
-      border-top-color: #ff0000;
     }
 
     .inline-video-box.active {
@@ -432,7 +397,7 @@
       object-fit: contain;
     }
 
-    /* ⏯️ چوارچێوەی لێدانی یوتوب */
+    /* ⏯️ چوارچێوەی لێدانی ڤیدیۆ (iframe) */
     .iframe-wrapper {
       position: relative;
       padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
@@ -591,7 +556,7 @@
 
     const user = tg.initDataUnsafe?.user;
 
-    // 🔗 فەنکشنی دەرهێنانی ئایدی یوتوب لە لینکە جیاوازەکان
+    // 🔗 فەنکشنی دەرهێنانی ئایدی یوتوب
     function getYoutubeId(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
       const match = url.match(regExp);
@@ -660,18 +625,18 @@
         }
       });
 
-      document.querySelectorAll('.youtube-btn, .video-play-btn').forEach(btn => {
+      document.querySelectorAll('.video-play-btn').forEach(btn => {
         if (btn.id !== `btn-${currentId}`) {
           btn.classList.remove('active-btn');
           const txt = btn.querySelector('span');
-          if (txt && btn.classList.contains('video-play-btn')) {
-            txt.innerText = 'شێوازی ژەنین';
+          if (txt) {
+            txt.innerText = txt.getAttribute('data-original-text') || 'شێوازی ژەنین';
           }
         }
       });
     }
 
-    // 🔴 فەنکشنی ژەنینی ڤیدیۆی یوتوب لەناو هەمان لاپەڕە (Inline Player)
+    // 🎬 فەنکشنی ژەنینی ڤیدیۆی دەرەکی لەناو هەمان لاپەڕە بەبێ دیاریکردنی لۆگۆ
     function toggleYoutubeInline(pageNum, idx, url) {
       const boxId = `yt-box-${pageNum}-${idx}`;
       const box = document.getElementById(boxId);
@@ -683,19 +648,28 @@
       if (box.classList.contains('active')) {
         wrapper.innerHTML = '';
         box.classList.remove('active');
-        if (btn) btn.classList.remove('active-btn');
+        if (btn) {
+          btn.classList.remove('active-btn');
+          const txt = btn.querySelector('span');
+          if (txt) txt.innerText = btn.getAttribute('data-original-text') || 'شێوازی ژەنین';
+        }
       } else {
         stopAllMediaExcept(boxId);
         const ytId = getYoutubeId(url);
         if (ytId) {
-          wrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+          // بەکارهێنانی youtube-nocookie و modestbranding بۆ شاردنەوەی ناوونیشان و نەناردن بۆ یوتوب
+          wrapper.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&controls=1&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
           box.classList.add('active');
-          if (btn) btn.classList.add('active-btn');
+          if (btn) {
+            btn.classList.add('active-btn');
+            const txt = btn.querySelector('span');
+            if (txt) txt.innerText = 'داخستنی ڤیدیۆ ✕';
+          }
         }
       }
     }
 
-    // 🎬 فەنکشنی لێدانی ڤیدیۆی ناوخۆیی (Direct Video Player)
+    // 🎬 فەنکشنی لێدانی ڤیدیۆی ڕاستەوخۆ (Direct MP4 Player)
     function toggleInlineVideo(pageNum, videoUrl) {
       const boxId = `inline-box-${pageNum}`;
       const box = document.getElementById(boxId);
@@ -894,23 +868,23 @@
               let youtubeBoxesHtml = '';
               let hasDirectVideo = false;
 
-              // 🎥 دگمەکان و پەنجەرەی یوتوب
+              // 🎥 دگمەکان (گۆڕدراون بۆ ئایکۆنی ئاسایی و ناوی شێوازی ژەنین)
               if (youtubeLinks[pageNum] && youtubeLinks[pageNum].length > 0) {
                 const links = youtubeLinks[pageNum];
                 buttonsHtml += links.map((url, idx) => {
-                  const label = links.length > 1 ? `ڤیدیۆی یوتوب ${idx + 1}` : 'ڤیدیۆی یوتوب';
+                  const label = links.length > 1 ? `شێوازی ژەنین ${idx + 1}` : 'شێوازی ژەنین';
                   return `
-                    <button id="yt-btn-${pageNum}-${idx}" class="youtube-btn" onclick="toggleYoutubeInline(${pageNum}, ${idx}, '${url}')">
-                      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    <button id="yt-btn-${pageNum}-${idx}" class="video-play-btn" data-original-text="${label}" onclick="toggleYoutubeInline(${pageNum}, ${idx}, '${url}')">
+                      <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
                       <span>${label}</span>
                     </button>
                   `;
                 }).join('');
 
                 youtubeBoxesHtml = links.map((url, idx) => `
-                  <div class="inline-video-box yt-box-theme" id="yt-box-${pageNum}-${idx}">
+                  <div class="inline-video-box" id="yt-box-${pageNum}-${idx}">
                     <div class="inline-video-bar">
-                      <span class="inline-video-title">🔴 یوتوب - لاپەڕەی ${pageNum}</span>
+                      <span class="inline-video-title">🎬 شێوازی ژەنین - لاپەڕەی ${pageNum}</span>
                       <button class="inline-video-close-btn" onclick="toggleYoutubeInline(${pageNum}, ${idx}, '')">✕ داخستن</button>
                     </div>
                     <div class="iframe-wrapper" id="yt-wrapper-${pageNum}-${idx}"></div>
@@ -923,7 +897,7 @@
                 hasDirectVideo = true;
                 const videoUrl = directVideoLinks[pageNum][0];
                 buttonsHtml += `
-                  <button id="vbtn-${pageNum}" class="video-play-btn" onclick="toggleInlineVideo(${pageNum}, '${videoUrl}')">
+                  <button id="vbtn-${pageNum}" class="video-play-btn" data-original-text="شێوازی ژەنین" onclick="toggleInlineVideo(${pageNum}, '${videoUrl}')">
                     <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
                     <span>شێوازی ژەنین</span>
                   </button>
